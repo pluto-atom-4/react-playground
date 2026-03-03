@@ -1,5 +1,5 @@
-import { useState, useCallback, useMemo } from 'react'
-import { Todo } from '../types'
+import { useState, useCallback } from 'react'
+import type { Todo } from '../types'
 
 export const useTodos = () => {
   const [todos, setTodos] = useState<Todo[]>([])
