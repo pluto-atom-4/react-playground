@@ -11,6 +11,51 @@ This guide shows how to test CRUD (Create, Read, Update, Delete) based hooks lik
 - `../templates/useTodos.test.ts` — Complete 451-line example
 - `../hook-testing-framework.md` — Universal testing concepts
 
+## Critical Implementation Notes
+
+### ID Generation & Timing
+
+**Important**: When testing CRUD hooks that use `Date.now()` for ID generation, be aware of timestamp collisions in rapid tests:
+
+❌ **This causes ID collisions** (same timestamp for multiple adds):
+```typescript
+act(() => {
+  result.current.addItem('Item 1')
+  result.current.addItem('Item 2')  // May get same ID as Item 1
+})
+```
+
+✅ **This ensures unique IDs** (separate timestamps):
+```typescript
+act(() => {
+  result.current.addItem('Item 1')
+})
+
+act(() => {
+  result.current.addItem('Item 2')  // Different timestamp, unique ID
+})
+```
+
+**Solution**: When testing operations that depend on unique IDs (delete by ID, toggle by ID), separate `act()` blocks ensure different timestamps. This is especially important for:
+- Tests that verify deletion of specific items
+- Tests that toggle state on specific items by ID
+- Integration tests that mix add + delete operations
+
+**Better Alternative** (if you control the hook implementation):
+Use a counter instead of `Date.now()` for more predictable IDs:
+```typescript
+const useMyHook = () => {
+  const [items, setItems] = useState<Item[]>([])
+  const [nextId, setNextId] = useState(1)
+  
+  const addItem = useCallback((text: string) => {
+    setItems((prev) => [...prev, { id: nextId, text }])
+    setNextId((prev) => prev + 1)
+  }, [nextId])
+  // ...
+}
+```
+
 ## CRUD Hook Structure
 
 CRUD hooks typically have this structure:
