@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { TodoList } from '@features/todo'
 import './App.css'
 
 type Problem = 'home' | 'todo' | 'search' | 'infinite-scroll' | 'counter' | 'accordion'
@@ -65,7 +66,9 @@ function App() {
             </div>
           )}
 
-          {currentProblem !== 'home' && (
+          {currentProblem === 'todo' && <TodoList />}
+
+          {currentProblem !== 'home' && currentProblem !== 'todo' && (
             <div className="bg-gray-800 rounded-lg p-8">
               <h2 className="text-2xl font-bold mb-4">
                 {problems.find((p) => p.id === currentProblem)?.name}
