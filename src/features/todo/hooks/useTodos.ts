@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react'
 import type { Todo } from '../types'
 
+let nextId = 1
+
 export const useTodos = () => {
   const [todos, setTodos] = useState<Todo[]>([])
 
@@ -8,7 +10,7 @@ export const useTodos = () => {
     if (text.trim()) {
       setTodos((prev) => [
         ...prev,
-        { id: Date.now(), text: text.trim(), completed: false },
+        { id: nextId++, text: text.trim(), completed: false },
       ])
     }
   }, [])
