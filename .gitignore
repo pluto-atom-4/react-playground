@@ -26,5 +26,3 @@ dist-ssr
 # Prevent Windows path artifacts (malformed directories from cross-platform syncing)
 C:/
 C:\
-*Users*
-*\.claude/

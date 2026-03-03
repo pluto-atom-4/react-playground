@@ -1,0 +1,23 @@
+{
+  "skill_name": "react-interview-problem-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate problem #1: Todo List with Filtering. I want a complete working implementation with Vitest unit tests and Playwright e2e tests for the happy path, plus documentation of what other tests should be added.",
+      "expected_output": "Complete feature in src/features/todo/ with TodoList component, useTodos hook, types, Vitest tests covering render + add + filter + delete, Playwright tests for user workflow, routed at /practice/todo, and docs/test-plans/todo/test-plan.md documenting alternative flows and edge cases.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Add problem #3: Phone Number Input Formatter to the playground. Generate the full component with TypeScript, unit tests, e2e tests for happy path, and a test plan document.",
+      "expected_output": "Feature in src/features/phone-formatter/ with PhoneNumberInput component handling (555) 123-4567 formatting, unit tests for formatting and edge cases, Playwright tests for user typing behavior, route at /practice/phone-formatter, and comprehensive test plan.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Generate problem #5: Infinite Scroll List. Full implementation with custom hooks, tests for the happy path (initial load + scroll to load more), Playwright e2e test for user scrolling behavior, and test plan for error handling and edge cases.",
+      "expected_output": "Feature in src/features/infinite-scroll/ with InfiniteScrollList component using IntersectionObserver, useInfiniteScroll hook, Vitest tests for rendering and scroll behavior, Playwright e2e test navigating to page and scrolling, test plan documenting error states, performance considerations, and mobile handling.",
+      "files": []
+    }
+  ]
+}
