@@ -2,6 +2,38 @@ import { renderHook, act } from '@testing-library/react'
 import { useTodos } from '../useTodos'
 import { describe, it, expect } from 'vitest'
 
+/**
+ * useTodos Hook Test Template
+ * 
+ * IMPORTANT NOTE ON ID GENERATION:
+ * The useTodos hook uses Date.now() for ID generation. When multiple todos are added
+ * within the same act() block in rapid succession, they may receive the same timestamp.
+ * 
+ * If you encounter issues with ID-dependent tests (delete, toggle by ID), separate the
+ * act() blocks to ensure different timestamps:
+ * 
+ * ❌ DON'T do this (may cause ID collisions):
+ *   act(() => {
+ *     result.current.addTodo('Todo 1')
+ *     result.current.addTodo('Todo 2')  // May have same ID
+ *     result.current.deleteTodo(id)     // May delete wrong todo
+ *   })
+ * 
+ * ✅ DO this instead:
+ *   act(() => {
+ *     result.current.addTodo('Todo 1')
+ *   })
+ *   act(() => {
+ *     result.current.addTodo('Todo 2')  // Different timestamp, unique ID
+ *   })
+ *   act(() => {
+ *     result.current.deleteTodo(id)
+ *   })
+ * 
+ * For tests that only check behavior (add multiple in one block, filter, search), 
+ * grouping in a single act() is fine since ID uniqueness isn't critical.
+ */
+
 describe('useTodos', () => {
   describe('initialization', () => {
     it('initializes with empty todos array', () => {

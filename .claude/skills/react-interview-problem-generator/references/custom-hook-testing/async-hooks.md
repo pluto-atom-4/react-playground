@@ -10,6 +10,76 @@ This guide shows how to test async data fetching hooks like useFetch, useAPI, us
 - `../hook-testing-framework.md` — Universal testing concepts
 - `../useTodos-hook-testing-guide.md` — CRUD example (follow same structure)
 
+## Critical Implementation Notes
+
+### Async & Timing Considerations
+
+**Important**: When testing async hooks with timers or rapid operations:
+
+❌ **Avoid mixing async/await with act()** (can cause timeouts):
+```typescript
+it('fetches data', async () => {
+  const { result } = renderHook(() => useFetch('/api/data'))
+  
+  await act(async () => {
+    await result.current.fetch()  // ❌ Can timeout
+  })
+})
+```
+
+✅ **Use waitFor for async assertions**:
+```typescript
+it('fetches data', async () => {
+  const { result } = renderHook(() => useFetch('/api/data'))
+  
+  act(() => {
+    result.current.fetch()
+  })
+  
+  await waitFor(() => {
+    expect(result.current.data).toBeDefined()
+  })
+})
+```
+
+❌ **Avoid fake timers for basic async tests** (can cause hangs):
+```typescript
+beforeEach(() => {
+  vi.useFakeTimers()  // ❌ Often causes timeouts with async hooks
+})
+```
+
+✅ **Use real timers with waitFor** (more reliable):
+```typescript
+beforeEach(() => {
+  // Use real timers
+})
+
+it('fetches data', async () => {
+  const { result } = renderHook(() => useFetch('/api/data'))
+  
+  act(() => {
+    result.current.fetch()
+  })
+  
+  await waitFor(() => {
+    expect(result.current.loading).toBe(false)
+  }, { timeout: 1000 })
+})
+```
+
+**Test Configuration**: Add timeouts to vitest config to prevent infinite hangs:
+```typescript
+// vitest.config.ts
+export default defineConfig({
+  test: {
+    testTimeout: 10000,    // Prevent infinite test hangs
+    hookTimeout: 10000,    // Prevent infinite hook setup
+    // ...
+  }
+})
+```
+
 ## Async Hook Structure
 
 Async hooks typically have this structure:
